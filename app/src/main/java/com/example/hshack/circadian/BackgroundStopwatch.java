@@ -1,5 +1,7 @@
 package com.example.hshack.circadian;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 import android.os.SystemClock;
 
@@ -18,6 +23,8 @@ public class BackgroundStopwatch extends Service {
     public static Runnable runnable = null;
     private long initial_time = 0;
     long timeInMilliseconds = 0L;
+    public NotificationCompat.Builder mBuilder;
+    public NotificationManager mNotificationManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -27,7 +34,20 @@ public class BackgroundStopwatch extends Service {
     @Override
     public void onCreate() {
 
-        Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
+        mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle("Circadian")
+                .setContentText("Sleep timer started.");
+        //Intent resultIntent = new Intent(this, BackgroundStopwatch.class);
+       // TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //stackBuilder.addParentStack(BackgroundStopwatch.class);
+        //stackBuilder.addNextIntent(resultIntent);
+        mBuilder.setOngoing(true);
+        //PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+       // mBuilder.setContentIntent(resultPendingIntent);
+        mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
+
 
         handler = new Handler();
         runnable = new Runnable() {
@@ -53,6 +73,7 @@ public class BackgroundStopwatch extends Service {
         SleepTime sleepTime= mDbHelper.getEntry(mDbHelper.getEntryCount()-1);
         Log.d("entry", String.valueOf(sleepTime.getDuration()));
         mDbHelper.close();
+        mNotificationManager.cancel(1);
         Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
     }
 
