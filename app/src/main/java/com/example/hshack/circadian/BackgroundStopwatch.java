@@ -56,8 +56,6 @@ public class BackgroundStopwatch extends Service {
 
         // Create a new map of values, where column names are the keys
         mDbHelper.addEntry(new SleepTime(initial_time, timeInMilliseconds));
-        SleepTime sleepTime= mDbHelper.getEntry(mDbHelper.getEntryCount()-1);
-        Log.d("entry", String.valueOf(sleepTime.getDuration()));
         mDbHelper.close();
         mNotificationManager.cancel(1);
     }
