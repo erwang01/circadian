@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
-import android.os.SystemClock;
 import android.util.Log;
 import android.support.v4.app.NotificationCompat;
 

@@ -1,5 +1,11 @@
 package com.example.hshack.circadian;
 
+import android.os.Build;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 /**
  * Created by hshack on 3/26/17.
  */
@@ -51,5 +57,37 @@ class SleepTime {
 
     public void setDuration(long duration) {
         this._duration = duration;
+    }
+
+    public static ArrayList<SleepTime> sortByDate(ArrayList<SleepTime> sleepTimes) {
+        Collections.sort(sleepTimes, new Comparator<SleepTime>() {
+            @Override
+            public int compare(SleepTime o1, SleepTime o2) {
+                long diff = (o1._timeStamp - o2._timeStamp);
+                if (diff < Integer.MAX_VALUE && diff > Integer.MIN_VALUE) {
+                    return (int) diff;
+                }
+                else {
+                    return (int) (diff / Math.abs(diff) * Integer.MAX_VALUE);
+                }
+            }
+        });
+        return sleepTimes;
+    }
+
+    public static ArrayList<SleepTime> sortByDuration(ArrayList<SleepTime> sleepTimes) {
+        Collections.sort(sleepTimes, new Comparator<SleepTime>() {
+            @Override
+            public int compare(SleepTime o1, SleepTime o2) {
+                long diff = (o1._duration - o2._duration);
+                if (diff < Integer.MAX_VALUE && diff > Integer.MIN_VALUE) {
+                    return (int) diff;
+                }
+                else {
+                    return (int) (diff / Math.abs(diff) * Integer.MAX_VALUE);
+                }
+            }
+        });
+        return sleepTimes;
     }
 }
