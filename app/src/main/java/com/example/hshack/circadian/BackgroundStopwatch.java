@@ -1,11 +1,13 @@
 package com.example.hshack.circadian;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 import android.os.SystemClock;
 
@@ -24,7 +26,7 @@ public class BackgroundStopwatch extends Service {
 
     @Override
     public void onCreate() {
-        SQLiteDatabase mydatabase = openOrCreateDatabase()
+
         Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
 
         handler = new Handler();
@@ -44,6 +46,13 @@ public class BackgroundStopwatch extends Service {
         handler.removeCallbacks(runnable);
         timeInMilliseconds = SystemClock.elapsedRealtime() - initial_time;
 
+        SleepDbHelper mDbHelper = new SleepDbHelper(getContext());
+
+        // Create a new map of values, where column names are the keys
+        mDbHelper.addEntry(new SleepTime(initial_time, timeInMilliseconds));
+        SleepTime sleepTime= mDbHelper.getEntry(mDbHelper.getEntryCount()-1);
+        Log.d("entry", String.valueOf(sleepTime.getDuration()));
+        mDbHelper.close();
         Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
     }
 
@@ -51,5 +60,9 @@ public class BackgroundStopwatch extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         initial_time = SystemClock.elapsedRealtime();
         return START_STICKY;
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
