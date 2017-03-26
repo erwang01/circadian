@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar)findViewById(R.id.my_toolbar);
         myToolbar.showOverflowMenu();
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle(null);
 
         MainFragment mainFragment = new MainFragment();
         FragmentManager fragmentManager = getFragmentManager();
