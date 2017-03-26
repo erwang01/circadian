@@ -11,6 +11,7 @@ import java.util.Comparator;
  */
 
 class SleepTime {
+    private static final int HOURS_PER_QUALITY_LEVEL = 3;
     private int _id;
     private long _timeStamp;
     private long _duration;
@@ -59,6 +60,10 @@ class SleepTime {
         this._duration = duration;
     }
 
+    public int getSleepQuality() {
+        return Math.min(3,Math.max((int)(_duration/1000/60/HOURS_PER_QUALITY_LEVEL),0));
+    }
+
     public static ArrayList<SleepTime> sortByDate(ArrayList<SleepTime> sleepTimes) {
         Collections.sort(sleepTimes, new Comparator<SleepTime>() {
             @Override
@@ -90,4 +95,5 @@ class SleepTime {
         });
         return sleepTimes;
     }
+
 }

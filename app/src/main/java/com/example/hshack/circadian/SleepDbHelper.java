@@ -195,5 +195,9 @@ public class SleepDbHelper extends SQLiteOpenHelper {
         db.close();
         return sleep_list;
     }
+    public SleepTime getLatestEntry()
+    {
+        return (getEntry(getEntryCount()-1));
+    }
 
 }
