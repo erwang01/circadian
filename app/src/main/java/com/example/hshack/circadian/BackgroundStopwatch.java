@@ -44,7 +44,7 @@ public class BackgroundStopwatch extends Service {
     @Override
     public void onDestroy() {
         handler.removeCallbacks(runnable);
-        timeInMilliseconds = SystemClock.elapsedRealtime() - initial_time;
+        timeInMilliseconds = System.currentTimeMillis() - initial_time;
 
         SleepDbHelper mDbHelper = new SleepDbHelper(getContext());
 
@@ -58,7 +58,7 @@ public class BackgroundStopwatch extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        initial_time = SystemClock.elapsedRealtime();
+        initial_time = System.currentTimeMillis();
         return START_STICKY;
     }
 
