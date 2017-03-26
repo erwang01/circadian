@@ -1,18 +1,16 @@
 package com.example.hshack.circadian;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+
 import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.support.v4.app.NotificationCompat;
+
 
 public class BackgroundStopwatch extends Service {
     public Context context = this;
@@ -30,6 +28,7 @@ public class BackgroundStopwatch extends Service {
 
     @Override
     public void onCreate() {
+
         mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle("Circadian")
@@ -42,30 +41,34 @@ public class BackgroundStopwatch extends Service {
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
-                //publishResult((int)SystemClock.elapsedRealtime() - (int)initial_time);
-                //handler.postDelayed(runnable, 1000);
             }
         };
 
         handler.postDelayed(runnable, 1500);
     }
 
-    /*public void publishResult(int result) {
-        Intent intent = new Intent("MY_ACTION");
-        intent.putExtra("result", result);
-        sendBroadcast(intent);
-    }*/
-
     @Override
     public void onDestroy() {
         handler.removeCallbacks(runnable);
+        timeInMilliseconds = System.currentTimeMillis() - initial_time;
+
+        SleepDbHelper mDbHelper = new SleepDbHelper(getContext());
+
+        // Create a new map of values, where column names are the keys
+        mDbHelper.addEntry(new SleepTime(initial_time, timeInMilliseconds));
+        SleepTime sleepTime= mDbHelper.getEntry(mDbHelper.getEntryCount()-1);
+        Log.d("entry", String.valueOf(sleepTime.getDuration()));
+        mDbHelper.close();
         mNotificationManager.cancel(1);
-        timeInMilliseconds = SystemClock.elapsedRealtime() - initial_time;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        initial_time = SystemClock.elapsedRealtime();
+        initial_time = System.currentTimeMillis();
         return START_STICKY;
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
