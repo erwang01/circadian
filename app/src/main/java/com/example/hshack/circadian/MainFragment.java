@@ -30,6 +30,8 @@ public class MainFragment extends Fragment {
         mProgress = (ProgressBar) v.findViewById(R.id.progressBar);
 
         ToggleButton toggle = (ToggleButton) v.findViewById(R.id.button);
+        toggle.setTextOn("Tracking sleep...");
+        toggle.setText("Track sleep");
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -66,13 +68,15 @@ public class MainFragment extends Fragment {
     public void displayMessage(View v) {
         TextView textView = (TextView)v.findViewById(R.id.hours);
         SleepDbHelper sdh = new SleepDbHelper(getContext());
-        SleepTime sleepTime = sdh.getEntry(sdh.getEntryCount()-1);
-        Log.d("****", String.valueOf(sleepTime.getDuration()));
+        if(sdh.getEntryCount() <= 0)
+            sdh.addEntry(new SleepTime());
+        SleepTime sleepTime = sdh.getEntry(sdh.getEntryCount());
         textView.setText(String.valueOf(String.format("%.5f", (double)sleepTime.getDuration()/1000.0/60.0/60.0)));
         textView.setVisibility(TextView.VISIBLE);
         TextView tv = (TextView)v.findViewById(R.id.congrats);
         tv.setVisibility(TextView.VISIBLE);
         TextView tv2 = (TextView)v.findViewById(R.id.hours_label);
         tv2.setVisibility(TextView.VISIBLE);
+        sdh.deleteEntry(0);
     }
 }

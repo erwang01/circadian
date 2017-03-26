@@ -3,6 +3,7 @@ package com.example.hshack.circadian;
 import android.os.Build;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -96,4 +97,11 @@ class SleepTime {
         return sleepTimes;
     }
 
+    public String toString() {
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(getTimeStamp());
+        return "" + cl.get(Calendar.MONTH) + "/" + cl.get(Calendar.DAY_OF_MONTH) + "/" + cl.get(Calendar.YEAR) +
+                "    " + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND) + "              " +
+                (int)getDuration()/1000/60/60 + ":" + (int)(((double)getDuration()/10000.0/60.0/60.0 - (int)getDuration()/1000/60/60) * 60);
+    }
 }

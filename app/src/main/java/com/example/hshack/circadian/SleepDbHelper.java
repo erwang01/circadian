@@ -128,7 +128,7 @@ public class SleepDbHelper extends SQLiteOpenHelper {
                 SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION
         };
         String whereClause = SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + " >= ?"
-                + "AND" + SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + "<= ?";
+                + " AND " + SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + " <= ?";
         String[] whereArgs = new String[] {
                 String.valueOf(timestampStart),
                 String.valueOf(timestampEnd)
@@ -198,6 +198,10 @@ public class SleepDbHelper extends SQLiteOpenHelper {
     public SleepTime getLatestEntry()
     {
         return (getEntry(getEntryCount()-1));
+    }
+
+    public void clearTable() {
+        this.getWritableDatabase().execSQL("delete from " + SleepReaderContract.SleepEntry.TABLE_NAME);
     }
 
 }

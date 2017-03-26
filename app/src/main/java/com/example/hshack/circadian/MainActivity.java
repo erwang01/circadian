@@ -73,7 +73,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, 1, Menu.NONE, "Reset Data");
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                SleepDbHelper sdh = new SleepDbHelper(this);
+                sdh.clearTable();
+                return true;
+        }
+        return false;
     }
 }

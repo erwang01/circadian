@@ -19,6 +19,11 @@
             </intent-filter>
         </activity>
         <service android:name="com.example.hshack.circadian.BackgroundStopwatch" />
+        <dependency>
+            <groupId>com.ibm.watson.developer_cloud</groupId>
+            <artifactId>conversation</artifactId>
+            <version>3.7.0</version>
+        </dependency>
 
     </application>
 

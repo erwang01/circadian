@@ -24,7 +24,7 @@ public class NotificationFragment extends Fragment {
     ListView listView;
     private ListView mainListView;
     private ListFragment lf;
-    private ArrayAdapter<String> listAdapter;
+    private ArrayAdapter<SleepTime> listAdapter;
 
     /** Called when the activity is first created. */
     @Override
@@ -37,17 +37,10 @@ public class NotificationFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
 
-        // Create and populate a List of planet names.
-        String[] planets = new String[]{"Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune"};
-        ArrayList<String> planetList = new ArrayList<String>();
-        planetList.add("Mercury");
-        planetList.add("Venus");
-        planetList.add("Earth");
-        //planetList.addAll(Arrays.asList(planets));
+        SleepDbHelper sdh = new SleepDbHelper(getContext());
+        ArrayList<SleepTime> sleepTimes = sdh.getEntriesByDate();
 
-        // Create ArrayAdapter using the planet list.
-        listAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_text_view, planetList);
+        listAdapter = new ArrayAdapter<SleepTime>(getActivity(), R.layout.list_text_view, sleepTimes);
        //System.out.println(listAdapter.getCount());
 
 
