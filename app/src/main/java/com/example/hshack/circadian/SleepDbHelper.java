@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by erwang01 on 3/25/17.
  */
@@ -108,6 +110,94 @@ public class SleepDbHelper extends SQLiteOpenHelper {
 
         // return count
         return count;
+    }
+
+    public ArrayList<SleepTime> getEntriesByDate()
+    {
+        return getEntriesByDate(0, System.currentTimeMillis());
+    }
+
+    public ArrayList<SleepTime> getEntriesByDate(long timestampStart, long timestampEnd)
+    {
+        ArrayList<SleepTime> sleep_list= new ArrayList<SleepTime>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] tableColumns = new String[] {
+                SleepReaderContract.SleepEntry._ID,
+                SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP,
+                SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION
+        };
+        String whereClause = SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + " >= ?"
+                + "AND" + SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + "<= ?";
+        String[] whereArgs = new String[] {
+                String.valueOf(timestampStart),
+                String.valueOf(timestampEnd)
+        };
+        String orderBy = SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP + " ASC";
+        Cursor c = db.query(SleepReaderContract.SleepEntry.TABLE_NAME, tableColumns, whereClause, whereArgs,
+                null, null, orderBy);
+
+        if (c.moveToFirst()) {
+            do {
+                SleepTime sleepTime = new SleepTime();
+                sleepTime.setID(Integer.parseInt(c.getString(0)));
+                sleepTime.setTimeStamp(Long.parseLong(c.getString(1)));
+                sleepTime.setDuration(Long.parseLong(c.getString(2)));
+                // Adding contact to list
+                sleep_list.add(sleepTime);
+            } while (c.moveToNext());
+        }
+
+        // return contact list
+        c.close();
+        db.close();
+        return sleep_list;
+    }
+
+    public ArrayList<SleepTime> getEntriesByDuration()
+    {
+        return getEntriesByDate(0, System.currentTimeMillis());
+    }
+
+    public ArrayList<SleepTime> getEntriesByDuration(long durationStart, long durationEnd)
+    {
+        ArrayList<SleepTime> sleep_list= new ArrayList<SleepTime>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] tableColumns = new String[] {
+                SleepReaderContract.SleepEntry._ID,
+                SleepReaderContract.SleepEntry.COLUMN_NAME_TIMESTAMP,
+                SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION
+        };
+        String whereClause = SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION + " >= ?"
+                + "AND" + SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION + "<= ?";
+        String[] whereArgs = new String[] {
+                String.valueOf(durationStart),
+                String.valueOf(durationEnd)
+        };
+        String orderBy = SleepReaderContract.SleepEntry.COLUMN_NAME_DURATION + " ASC";
+        Cursor c = db.query(SleepReaderContract.SleepEntry.TABLE_NAME, tableColumns, whereClause, whereArgs,
+                null, null, orderBy);
+
+        if (c.moveToFirst()) {
+            do {
+                SleepTime sleepTime = new SleepTime();
+                sleepTime.setID(Integer.parseInt(c.getString(0)));
+                sleepTime.setTimeStamp(Long.parseLong(c.getString(1)));
+                sleepTime.setDuration(Long.parseLong(c.getString(2)));
+                // Adding contact to list
+                sleep_list.add(sleepTime);
+            } while (c.moveToNext());
+        }
+
+        // return contact list
+        c.close();
+        db.close();
+        return sleep_list;
+    }
+    public SleepTime getLatestEntry()
+    {
+        return (getEntry(getEntryCount()-1));
     }
 
 }
